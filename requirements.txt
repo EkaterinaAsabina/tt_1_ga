@@ -1,0 +1,6 @@
+gql[all]==3.4.1
+pandas
+psycopg2
+sqlalchemy
+jinja2
+
