@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, Index
 from sqlalchemy.engine import URL
 from sqlalchemy.sql import text
 from sqlalchemy.orm import declarative_base
@@ -41,7 +41,7 @@ class Launches(Base):
     __table_args__ = {"schema": psg_schema}
 
     launch_id = Column(String(50), primary_key=True)
-    rocket_id = Column(String(50), ForeignKey(Rockets.rocket_id))
+    rocket_id = Column(String(50), ForeignKey(Rockets.rocket_id), index=True)
     wikipedia = Column(String(150))
     video_link = Column(String(150))
     reddit_recovery = Column(String(150))
@@ -59,7 +59,7 @@ class Missions(Base):
 
     mission_id = Column(String(26), primary_key=True)
     mission_name = Column(String(50))
-    launch_id = Column(String(24), ForeignKey(Launches.launch_id))
+    launch_id = Column(String(24), ForeignKey(Launches.launch_id), index=True)
 
 class Spacexdatamart(Base):
     __tablename__ = "spacex_datamart"
@@ -68,6 +68,8 @@ class Spacexdatamart(Base):
     mission_name = Column(String(50), primary_key=True)
     rocket_name = Column(String(100), primary_key=True)
     links_count = Column(Integer)
+
+    Index('spacex_datamart_index', mission_name, rocket_name)
 
 def load_datamart():
     environment = Environment(loader=FileSystemLoader(""), trim_blocks=True)
